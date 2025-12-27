@@ -1,0 +1,50 @@
+{
+  "rooms": [
+    {
+      "id": "room_1766819572357481800",
+      "name": "test",
+      "host_id": "1111",
+      "players": [
+        "1111"
+      ],
+      "max_players": 0,
+      "status": "waiting",
+      "created_at": "2025-12-27T15:12:52.3574818+08:00"
+    },
+    {
+      "id": "room_1766819823564394600",
+      "name": "test2",
+      "host_id": "1111",
+      "players": [
+        "1111"
+      ],
+      "max_players": 0,
+      "status": "waiting",
+      "created_at": "2025-12-27T15:17:03.5643946+08:00"
+    },
+    {
+      "id": "room_1766819988796004300",
+      "name": "test3",
+      "host_id": "11111",
+      "players": [
+        "11111",
+        "22222"
+      ],
+      "max_players": 2,
+      "status": "ready",
+      "created_at": "2025-12-27T15:19:48.7960043+08:00"
+    },
+    {
+      "id": "room_1766820450778997600",
+      "name": "test4",
+      "host_id": "11111",
+      "players": [
+        "11111",
+        "222222"
+      ],
+      "max_players": 2,
+      "status": "playing",
+      "created_at": "2025-12-27T15:27:30.7789976+08:00"
+    }
+  ]
+}

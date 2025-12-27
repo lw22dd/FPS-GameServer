@@ -1,0 +1,29 @@
+{
+  "name": "customer-manager-front",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/vite": "^4.1.18",
+    "autoprefixer": "^10.4.21",
+    "axios": "^1.12.2",
+    "pinia": "^3.0.3",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13",
+    "vue": "^3.5.12",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.9",
+    "vue-tsc": "^2.1.6"
+  }
+}

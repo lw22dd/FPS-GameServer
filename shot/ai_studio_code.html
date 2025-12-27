@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>双人射击对战游戏</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #222;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        canvas {
+            border: 4px solid #fff;
+            background-color: #000;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        .ui {
+            margin-bottom: 10px;
+            font-size: 24px;
+            display: flex;
+            gap: 50px;
+        }
+        .controls {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ui">
+        <div id="p1Score">玩家 1 (蓝): 5</div>
+        <div id="p2Score">玩家 2 (红): 5</div>
+    </div>
+
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+
+    <div class="controls">
+        玩家 1: W/S 移动, D 射击 | 玩家 2: ↑/↓ 移动, ← 射击
+    </div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const p1ScoreDisplay = document.getElementById('p1Score');
+    const p2ScoreDisplay = document.getElementById('p2Score');
+
+    // 游戏配置
+    const playerWidth = 20;
+    const playerHeight = 60;
+    const bulletSize = 5;
+    const moveSpeed = 5;
+    const bulletSpeed = 7;
+    const maxHP = 5;
+
+    // 玩家对象
+    const p1 = {
+        x: 50,
+        y: canvas.height / 2 - playerHeight / 2,
+        hp: maxHP,
+        color: '#00D2FF',
+        bullets: []
+    };
+
+    const p2 = {
+        x: canvas.width - 50 - playerWidth,
+        y: canvas.height / 2 - playerHeight / 2,
+        hp: maxHP,
+        color: '#FF3D67',
+        bullets: []
+    };
+
+    // 按键状态
+    const keys = {};
+
+    window.addEventListener('keydown', (e) => {
+        keys[e.key] = true;
+        // 射击事件（按下瞬间触发一次）
+        if (e.key === 'd' || e.key === 'D') shoot(p1, 1);
+        if (e.key === 'ArrowLeft') shoot(p2, -1);
+    });
+
+    window.addEventListener('keyup', (e) => {
+        keys[e.key] = false;
+    });
+
+    function shoot(player, direction) {
+        if (player.hp <= 0) return;
+        player.bullets.push({
+            x: direction === 1 ? player.x + playerWidth : player.x,
+            y: player.y + playerHeight / 2,
+            vx: direction * bulletSpeed
+        });
+    }
+
+    function update() {
+        if (p1.hp <= 0 || p2.hp <= 0) return;
+
+        // 玩家 1 移动
+        if (keys['w'] || keys['W']) p1.y -= moveSpeed;
+        if (keys['s'] || keys['S']) p1.y += moveSpeed;
+
+        // 玩家 2 移动
+        if (keys['ArrowUp']) p2.y -= moveSpeed;
+        if (keys['ArrowDown']) p2.y += moveSpeed;
+
+        // 限制边界
+        [p1, p2].forEach(p => {
+            if (p.y < 0) p.y = 0;
+            if (p.y > canvas.height - playerHeight) p.y = canvas.height - playerHeight;
+        });
+
+        // 处理子弹
+        moveBullets(p1, p2);
+        moveBullets(p2, p1);
+    }
+
+    function moveBullets(attacker, target) {
+        for (let i = attacker.bullets.length - 1; i >= 0; i--) {
+            let b = attacker.bullets[i];
+            b.x += b.vx;
+
+            // 碰撞检测
+            if (
+                b.x > target.x &&
+                b.x < target.x + playerWidth &&
+                b.y > target.y &&
+                b.y < target.y + playerHeight
+            ) {
+                target.hp--;
+                attacker.bullets.splice(i, 1);
+                updateUI();
+                checkGameOver();
+                continue;
+            }
+
+            // 移出屏幕销毁
+            if (b.x < 0 || b.x > canvas.width) {
+                attacker.bullets.splice(i, 1);
+            }
+        }
+    }
+
+    function updateUI() {
+        p1ScoreDisplay.innerText = `玩家 1 (蓝): ${p1.hp}`;
+        p2ScoreDisplay.innerText = `玩家 2 (红): ${p2.hp}`;
+    }
+
+    function checkGameOver() {
+        if (p1.hp <= 0 || p2.hp <= 0) {
+            const winner = p1.hp <= 0 ? "玩家 2 (红色)" : "玩家 1 (蓝色)";
+            setTimeout(() => {
+                alert("游戏结束！胜利者是: " + winner);
+                location.reload();
+            }, 10);
+        }
+    }
+
+    function draw() {
+        // 清屏
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 画玩家 1
+        ctx.fillStyle = p1.color;
+        ctx.fillRect(p1.x, p1.y, playerWidth, playerHeight);
+
+        // 画玩家 2
+        ctx.fillStyle = p2.color;
+        ctx.fillRect(p2.x, p2.y, playerWidth, playerHeight);
+
+        // 画子弹
+        ctx.fillStyle = "white";
+        p1.bullets.forEach(b => ctx.fillRect(b.x, b.y, bulletSize, bulletSize));
+        p2.bullets.forEach(b => ctx.fillRect(b.x, b.y, bulletSize, bulletSize));
+    }
+
+    function gameLoop() {
+        update();
+        draw();
+        requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+</script>
+</body>
+</html>

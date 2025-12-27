@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>游戏服务器测试</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1a1a2e; color: #eee; }
+        .test-section { background: #16213e; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        button { background: #0f3460; color: white; border: none; padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #e94560; }
+        .result { background: #0f3460; padding: 10px; margin-top: 10px; border-radius: 4px; font-family: monospace; white-space: pre-wrap; }
+        h1 { color: #e94560; }
+        h2 { color: #0f9b8e; }
+        input { padding: 8px; margin: 5px; border-radius: 4px; border: 1px solid #0f3460; background: #1a1a2e; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🎮 游戏服务器测试</h1>
+    
+    <div class="test-section">
+        <h2>1. 用户注册测试</h2>
+        <input type="text" id="regUsername" placeholder="用户名" value="player1">
+        <input type="password" id="regPassword" placeholder="密码" value="123456">
+        <input type="email" id="regEmail" placeholder="邮箱" value="player1@test.com">
+        <button onclick="register()">注册</button>
+        <div id="regResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. 用户登录测试</h2>
+        <input type="text" id="loginUsername" placeholder="用户名" value="player1">
+        <input type="password" id="loginPassword" placeholder="密码" value="123456">
+        <button onclick="login()">登录</button>
+        <div id="loginResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. 创建房间测试</h2>
+        <input type="text" id="roomName" placeholder="房间名" value="测试房间">
+        <button onclick="createRoom()">创建房间</button>
+        <div id="roomResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. 房间列表测试</h2>
+        <button onclick="getRoomList()">获取列表</button>
+        <div id="listResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080';
+
+        async function register() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const email = document.getElementById('regEmail').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/user/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, email })
+                });
+                const data = await response.json();
+                document.getElementById('regResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('regResult').textContent = '错误: ' + error.message;
+            }
+        }
+
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/user/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+                document.getElementById('loginResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('loginResult').textContent = '错误: ' + error.message;
+            }
+        }
+
+        async function createRoom() {
+            const name = document.getElementById('roomName').value;
+            const username = document.getElementById('loginUsername').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/rooms/create?username=${username}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, maxPlayers: 2 })
+                });
+                const data = await response.json();
+                document.getElementById('roomResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('roomResult').textContent = '错误: ' + error.message;
+            }
+        }
+
+        async function getRoomList() {
+            try {
+                const response = await fetch(`${API_BASE}/rooms/list`);
+                const data = await response.json();
+                document.getElementById('listResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('listResult').textContent = '错误: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
