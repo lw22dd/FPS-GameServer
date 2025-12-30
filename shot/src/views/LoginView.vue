@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-box">
       <h1>🎮 双人对战游戏</h1>
-      <p class="subtitle">请输入用户名开始游戏</p>
+      <p class="subtitle">请输入用户名和密码登录</p>
       
       <div class="input-group">
         <input 
@@ -14,14 +14,24 @@
         />
       </div>
       
+      <div class="input-group">
+        <input 
+          type="password" 
+          v-model="password" 
+          placeholder="密码（至少6位）"
+          @keyup.enter="login"
+          maxlength="20"
+        />
+      </div>
+      
       <div class="error-message" v-if="error">{{ error }}</div>
       
       <button @click="login" :disabled="!canLogin || loading" class="login-btn">
-        {{ loading ? '登录中...' : '开始游戏' }}
+        {{ loading ? '登录中...' : '登录' }}
       </button>
       
       <div class="tips">
-        <p>💡 提示：用户名不能包含空格</p>
+        <p>💡 提示：用户名不能包含空格，密码至少6位</p>
         <p>📡 服务器地址: http://localhost:8080</p>
       </div>
     </div>
@@ -35,18 +45,22 @@ import socketService from '@/services/socketService'
 
 const router = useRouter()
 const username = ref('')
+const password = ref('')
 const error = ref('')
 const loading = ref(false)
 
 const canLogin = computed(() => {
   const name = username.value.trim()
-  return name.length >= 3 && name.length <= 20 && !name.includes(' ')
+  const pass = password.value.trim()
+  return name.length >= 3 && name.length <= 20 && !name.includes(' ') && pass.length >= 6
 })
 
 async function login() {
   error.value = ''
   
   const name = username.value.trim()
+  const pass = password.value.trim()
+  
   if (name.length < 3) {
     error.value = '用户名至少3个字符'
     return
@@ -59,6 +73,10 @@ async function login() {
     error.value = '用户名不能包含空格'
     return
   }
+  if (pass.length < 6) {
+    error.value = '密码至少6位'
+    return
+  }
   
   loading.value = true
   
@@ -66,14 +84,14 @@ async function login() {
     const response = await fetch('http://localhost:8080/user/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: name, password: '123456' })
+      body: JSON.stringify({ username: name, password: pass })
     })
     
     const result = await response.json()
     
     if (!result.success) {
       if (result.message === '用户不存在') {
-        await registerUser(name)
+        await registerUser(name, pass)
       } else {
         error.value = result.message
         loading.value = false
@@ -91,11 +109,11 @@ async function login() {
   }
 }
 
-async function registerUser(name: string) {
+async function registerUser(name: string, pass: string) {
   const response = await fetch('http://localhost:8080/user/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: name, password: '123456', email: `${name}@game.local` })
+    body: JSON.stringify({ username: name, password: pass, email: `${name}@game.local` })
   })
   
   const result = await response.json()
