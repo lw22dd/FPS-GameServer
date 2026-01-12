@@ -20,16 +20,16 @@ type RoomService interface {
 
 // roomService 实现 RoomService 接口
 type roomService struct {
-	roomRepo  repository.RoomRepository
-	userRepo  repository.UserRepository
+	roomRepo   repository.RoomRepository
+	userRepo   repository.UserRepository
 	resultRepo repository.ResultRepository
 }
 
 // NewRoomService 创建 RoomService 实例
 func NewRoomService(roomRepo repository.RoomRepository, userRepo repository.UserRepository, resultRepo repository.ResultRepository) RoomService {
 	return &roomService{
-		roomRepo:  roomRepo,
-		userRepo:  userRepo,
+		roomRepo:   roomRepo,
+		userRepo:   userRepo,
 		resultRepo: resultRepo,
 	}
 }
@@ -38,7 +38,7 @@ func NewRoomService(roomRepo repository.RoomRepository, userRepo repository.User
 func (s *roomService) CreateRoom(req protocol.CreateRoomRequest, hostID string) (*models.Room, error) {
 	// 创建新房间
 	room := models.Room{
-		ID:         "room_" + time.Now().Format("20060102150405"),
+		ID:         "room_" + time.Now().Format("20060102150405"), //从当前时间中生成房间ID，按照20060102150405格式
 		Name:       req.Name,
 		HostID:     hostID,
 		Players:    []string{hostID},

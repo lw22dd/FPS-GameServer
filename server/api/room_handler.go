@@ -29,8 +29,6 @@ func (h *RoomHandler) CreateRoom(c *gin.Context) {
 		return
 	}
 
-	// 从请求中获取用户名（这里简化处理，实际应该从认证信息中获取）
-	// 注意：这里需要从其他地方获取用户名，比如查询参数或认证信息
 	username := c.Query("username")
 	if username == "" {
 		c.JSON(http.StatusBadRequest, protocol.ErrorResponse{

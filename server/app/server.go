@@ -617,7 +617,7 @@ func (h *Hub) startGame(client *Client) {
 	room.Status = "playing"
 	h.roomStore.Update(*room)
 
-	gameStart := protocol.Message{
+	gameStart := protocol.Message{ // 游戏开始消息，准备广播
 		Type: protocol.MsgTypeGameStart,
 		Payload: mustMarshal(protocol.RoomInfo{
 			ID:         room.ID,
@@ -630,7 +630,7 @@ func (h *Hub) startGame(client *Client) {
 	data, _ := json.Marshal(gameStart)
 
 	h.mu.RLock()
-	for c := range h.clients {
+	for c := range h.clients { // 遍历所有客户端并发送开始游戏消息
 		if c.roomID == client.roomID {
 			c.send <- data
 		}
