@@ -1,3 +1,44 @@
 {
-  "results": []
+  "results": [
+    {
+      "id": "result_1768192464140568800",
+      "room_id": "",
+      "winner": "user",
+      "loser": "user2",
+      "play_time": "2026-01-12T12:34:24.1405688+08:00",
+      "duration": 0
+    },
+    {
+      "id": "result_1768192464141357700",
+      "room_id": "",
+      "winner": "user",
+      "loser": "user2",
+      "play_time": "2026-01-12T12:34:24.1413577+08:00",
+      "duration": 0
+    },
+    {
+      "id": "result_1768192464141870600",
+      "room_id": "",
+      "winner": "user",
+      "loser": "user2",
+      "play_time": "2026-01-12T12:34:24.1418706+08:00",
+      "duration": 0
+    },
+    {
+      "id": "result_1768202304621798500",
+      "room_id": "",
+      "winner": "user",
+      "loser": "",
+      "play_time": "2026-01-12T15:18:24.6217985+08:00",
+      "duration": 0
+    },
+    {
+      "id": "result_1768202304623931100",
+      "room_id": "",
+      "winner": "user",
+      "loser": "",
+      "play_time": "2026-01-12T15:18:24.6239311+08:00",
+      "duration": 0
+    }
+  ]
 }

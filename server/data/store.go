@@ -15,12 +15,9 @@ var (
 )
 
 func init() {
-	ex, err := os.Executable()
-	if err != nil {
-		DataDir = "data"
-	} else {
-		DataDir = filepath.Join(filepath.Dir(ex), "data")
-	}
+	// 直接使用当前目录下的 data 目录，而不是基于可执行文件的位置
+	DataDir = "data"
+	fmt.Printf("数据目录: %s\n", DataDir)
 	if err := os.MkdirAll(DataDir, 0755); err != nil {
 		fmt.Printf("创建数据目录失败: %v\n", err)
 	}

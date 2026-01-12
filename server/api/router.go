@@ -8,7 +8,7 @@ import (
 
 // Router 定义路由器结构
 type Router struct {
-	Engine    *gin.Engine
+	Engine      *gin.Engine
 	userService service.UserService
 	roomService service.RoomService
 }
@@ -16,7 +16,7 @@ type Router struct {
 // NewRouter 创建路由器实例
 func NewRouter(userService service.UserService, roomService service.RoomService) *Router {
 	return &Router{
-		Engine:    gin.Default(),
+		Engine:      gin.Default(),
 		userService: userService,
 		roomService: roomService,
 	}

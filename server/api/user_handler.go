@@ -15,7 +15,9 @@ type UserHandler struct {
 
 // NewUserHandler 创建 UserHandler 实例
 func NewUserHandler(userService service.UserService) *UserHandler {
-	return &UserHandler{userService: userService}
+	return &UserHandler{
+		userService: userService,
+	}
 }
 
 // Register 处理用户注册请求

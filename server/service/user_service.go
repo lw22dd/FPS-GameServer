@@ -1,6 +1,8 @@
 package service
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"game/models"
 	"game/protocol"
 	"game/repository"
@@ -57,10 +59,14 @@ func (s *userService) Register(req protocol.RegisterRequest) (bool, string) {
 		return false, "该邮箱已被注册"
 	}
 
+	// MD5加密密码
+	passwordHash := md5.Sum([]byte(req.Password))
+	passwordHex := hex.EncodeToString(passwordHash[:])
+
 	// 创建新用户
 	user := models.User{
 		Username:  req.Username,
-		Password:  req.Password,
+		Password:  passwordHex,
 		Email:     req.Email,
 		Online:    false,
 		LoginTime: time.Time{},
@@ -80,8 +86,10 @@ func (s *userService) Login(req protocol.LoginRequest) (bool, string, string) {
 		return false, "用户不存在", ""
 	}
 
-	// 验证密码
-	if user.Password != req.Password {
+	// MD5加密输入密码并验证
+	passwordHash := md5.Sum([]byte(req.Password))
+	passwordHex := hex.EncodeToString(passwordHash[:])
+	if user.Password != passwordHex {
 		return false, "密码错误", ""
 	}
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 )
 
+// 这里是所有通信协议
 type MessageType string
 
 const (

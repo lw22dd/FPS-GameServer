@@ -69,10 +69,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import socketService, { RoomInfo } from '@/services/socketService'
+import { useSocketStore, RoomInfo } from '@/stores/socketStore'
 
 const router = useRouter()
-const username = ref(socketService.username.value)
+const socketStore = useSocketStore()
+const username = ref(socketStore.username)
 const rooms = ref<RoomInfo[]>([])
 const newRoomName = ref('')
 const error = ref('')
@@ -83,48 +84,48 @@ const canCreateRoom = computed(() => {
 })
 
 onMounted(() => {
-  if (!socketService.connected.value) {
+  if (!socketStore.connected) {
     router.push('/')
     return
   }
   
   refreshRooms()
   
-  socketService.on('roomList', (roomList: RoomInfo[]) => {
+  socketStore.on('roomList', (roomList: RoomInfo[]) => {
     rooms.value = roomList
   })
   
-  socketService.on('joinedRoom', (room: RoomInfo) => {
+  socketStore.on('joinedRoom', (room: RoomInfo) => {
     router.push('/game')
   })
   
-  socketService.on('joinError', (message: string) => {
+  socketStore.on('joinError', (message: string) => {
     error.value = message
   })
 })
 
 onUnmounted(() => {
-  socketService.off('roomList', () => {})
-  socketService.off('joinedRoom', () => {})
-  socketService.off('joinError', () => {})
+  socketStore.off('roomList', () => {})
+  socketStore.off('joinedRoom', () => {})
+  socketStore.off('joinError', () => {})
 })
 
 function refreshRooms() {
-  socketService.getRoomList()
+  socketStore.getRoomList()
 }
 
 function createRoom() {
   if (!canCreateRoom.value) return
-  socketService.createRoom(newRoomName.value.trim())
+  socketStore.createRoom(newRoomName.value.trim())
   newRoomName.value = ''
 }
 
 function joinRoom(roomId: string) {
-  socketService.joinRoom(roomId)
+  socketStore.joinRoom(roomId)
 }
 
 function logout() {
-  socketService.disconnect()
+  socketStore.disconnect()
   router.push('/')
 }
 

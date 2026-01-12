@@ -12,23 +12,23 @@
       "username": "22222",
       "password": "123456",
       "email": "22222@game.local",
-      "online": true,
+      "online": false,
       "login_time": "2025-12-27T15:19:41.9046335+08:00",
-      "room_id": "room_1766819988796004300"
+      "room_id": ""
     },
     {
       "username": "1111",
       "password": "123456",
       "email": "1111@game.local",
-      "online": true,
+      "online": false,
       "login_time": "2025-12-27T15:16:25.0305567+08:00",
-      "room_id": "room_1766819823564394600"
+      "room_id": ""
     },
     {
       "username": "2222",
       "password": "123456",
       "email": "2222@game.local",
-      "online": true,
+      "online": false,
       "login_time": "2025-12-27T15:16:38.2446097+08:00",
       "room_id": ""
     },
@@ -36,9 +36,9 @@
       "username": "11111",
       "password": "123456",
       "email": "11111@game.local",
-      "online": true,
+      "online": false,
       "login_time": "2025-12-27T15:27:13.9001164+08:00",
-      "room_id": "room_1766820450778997600"
+      "room_id": ""
     },
     {
       "username": "222222",
@@ -46,7 +46,39 @@
       "email": "222222@game.local",
       "online": false,
       "login_time": "0001-01-01T00:00:00Z",
-      "room_id": "room_1766820450778997600"
+      "room_id": ""
+    },
+    {
+      "username": "testuser789",
+      "password": "e10adc3949ba59abbe56e057f20f883e",
+      "email": "test789@game.local",
+      "online": false,
+      "login_time": "0001-01-01T00:00:00Z",
+      "room_id": ""
+    },
+    {
+      "username": "user2",
+      "password": "e10adc3949ba59abbe56e057f20f883e",
+      "email": "user2@game.local",
+      "online": true,
+      "login_time": "2026-01-12T15:32:20.5635247+08:00",
+      "room_id": "room_1768203200540302700"
+    },
+    {
+      "username": "testuser123",
+      "password": "e10adc3949ba59abbe56e057f20f883e",
+      "email": "test123@game.local",
+      "online": false,
+      "login_time": "2026-01-12T12:21:37.991747+08:00",
+      "room_id": ""
+    },
+    {
+      "username": "user",
+      "password": "e10adc3949ba59abbe56e057f20f883e",
+      "email": "user@game.local",
+      "online": true,
+      "login_time": "2026-01-12T15:33:16.5324059+08:00",
+      "room_id": "room_1768203200540302700"
     }
   ]
 }

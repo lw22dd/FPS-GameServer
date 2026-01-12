@@ -10,11 +10,11 @@
       </div>
       
       <div class="game-status">
-        <span v-if="!socketService.gameStarted.value" class="waiting">
+        <span v-if="!socketStore.gameStarted" class="waiting">
           等待游戏开始...
         </span>
-        <span v-else-if="socketService.gameOver.value" class="game-over">
-          🏆 {{ socketService.winner.value }} 获胜!
+        <span v-else-if="socketStore.gameOver" class="game-over">
+          🏆 {{ socketStore.winner }} 获胜!
         </span>
         <span v-else class="playing">
           对战中
@@ -33,23 +33,23 @@
     <canvas ref="gameCanvas" width="800" height="400"></canvas>
 
     <!-- 开始游戏按钮，只有房主可见 -->
-    <div v-if="isHost && !socketService.gameStarted.value" class="start-game-container">
-      <button @click="startGame" class="start-game-btn">开始游戏</button>
-    </div>
+      <div v-if="isHost && !socketStore.gameStarted" class="start-game-container">
+        <button @click="startGame" class="start-game-btn">开始游戏</button>
+      </div>
 
     <div class="controls">
       <span>移动: W/S 或 ↑/↓ | 射击: D 或 ← | 离开: Esc</span>
     </div>
 
-    <div v-if="socketService.gameOver.value" class="game-over-overlay">
+    <div v-if="socketStore.gameOver" class="game-over-overlay">
       <div class="game-over-content">
         <h2>🎉 游戏结束</h2>
-        <p>获胜者: {{ socketService.winner.value }}</p>
+        <p>获胜者: {{ socketStore.winner }}</p>
         <button @click="backToRooms" class="btn">返回房间</button>
       </div>
     </div>
     
-    <div v-if="!socketService.connected.value" class="connection-error">
+    <div v-if="!socketStore.connected" class="connection-error">
       <p>连接已断开，正在重连...</p>
     </div>
   </div>
@@ -58,9 +58,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import socketService from '@/services/socketService'
+import { useSocketStore } from '@/stores/socketStore'
 
 const router = useRouter()
+const socketStore = useSocketStore()
 const gameCanvas = ref<HTMLCanvasElement | null>(null)
 let ctx: CanvasRenderingContext2D | null = null
 let animationId: number | null = null
@@ -97,17 +98,17 @@ const fireCooldown = 500
 
 // 判断当前玩家是否是房主
 const isHost = computed(() => {
-  const room = socketService.currentRoom.value
-  return room && room.host === socketService.username.value
+  const room = socketStore.currentRoom
+  return room && room.host === socketStore.username
 })
 
 // 开始游戏方法
 function startGame() {
-  socketService.startGame()
+  socketStore.startGame()
 }
 
 onMounted(() => {
-  if (!socketService.connected.value) {
+  if (!socketStore.connected) {
     router.push('/rooms')
     return
   }
@@ -140,7 +141,7 @@ function removeEventListeners() {
 }
 
 function setupSocketListeners() {
-  socketService.on('gameStart', (room: any) => {
+  socketStore.on('gameStart', (room: any) => {
     if (room.players && room.players.length >= 2) {
       player1Name.value = room.players[0]
       player2Name.value = room.players[1]
@@ -149,49 +150,49 @@ function setupSocketListeners() {
     initGameState()
   })
   
-  socketService.on('gameStateUpdate', (state: any) => {
+  socketStore.on('gameStateUpdate', (state: any) => {
     updateGameState(state)
   })
   
-  socketService.on('playerAction', (action: any) => {
+  socketStore.on('playerAction', (action: any) => {
     handleRemotePlayerAction(action)
   })
   
-  socketService.on('fireAction', (action: any) => {
+  socketStore.on('fireAction', (action: any) => {
     handleRemoteFire(action)
   })
   
-  socketService.on('hitAction', (action: any) => {
+  socketStore.on('hitAction', (action: any) => {
     handleRemoteHit(action)
   })
   
-  socketService.on('deathAction', (action: any) => {
+  socketStore.on('deathAction', (action: any) => {
     handleRemoteDeath(action)
   })
   
-  socketService.on('gameOver', (result: any) => {
+  socketStore.on('gameOver', (result: any) => {
     console.log('游戏结束:', result)
   })
   
-  socketService.on('disconnected', () => {
+  socketStore.on('disconnected', () => {
     router.push('/rooms')
   })
 }
 
 function cleanupSocketListeners() {
-  socketService.off('gameStart', () => {})
-  socketService.off('gameStateUpdate', () => {})
-  socketService.off('playerAction', () => {})
-  socketService.off('fireAction', () => {})
-  socketService.off('hitAction', () => {})
-  socketService.off('deathAction', () => {})
-  socketService.off('gameOver', () => {})
-  socketService.off('disconnected', () => {})
+  socketStore.off('gameStart', () => {})
+  socketStore.off('gameStateUpdate', () => {})
+  socketStore.off('playerAction', () => {})
+  socketStore.off('fireAction', () => {})
+  socketStore.off('hitAction', () => {})
+  socketStore.off('deathAction', () => {})
+  socketStore.off('gameOver', () => {})
+  socketStore.off('disconnected', () => {})
 }
 
 function initGameState() {
-  const username = socketService.username.value
-  const room = socketService.currentRoom.value
+  const username = socketStore.username
+  const room = socketStore.currentRoom
   
   if (room && room.players) {
     player1Name.value = room.players[0] || ''
@@ -230,10 +231,10 @@ function handleKeydown(e: KeyboardEvent) {
     return
   }
   
-  if (!socketService.gameStarted.value || socketService.gameOver.value) return
+  if (!socketStore.gameStarted || socketStore.gameOver) return
   
   const now = Date.now()
-  const isPlayer1 = player1Name.value === socketService.username.value
+  const isPlayer1 = player1Name.value === socketStore.username
   const myPlayer = isPlayer1 ? p1.value : p2.value
   const opponent = isPlayer1 ? p2.value : p1.value
   
@@ -267,13 +268,14 @@ function fire(player: typeof p1.value, direction: number) {
   
   player.bullets.push(bullet)
   
-  socketService.sendFire(direction, bullet.x, bullet.y)
+  socketStore.sendFire(direction, bullet.x, bullet.y)
 }
 
-function update() {
-  if (!socketService.gameStarted.value || socketService.gameOver.value) return
-  
-  const isPlayer1 = player1Name.value === socketService.username.value
+//事件总循环
+function update() { 
+  if (!socketStore.gameStarted || socketStore.gameOver) return
+  // 更新玩家位置，根据玩家名判断当前玩家是玩家1还是玩家2
+  const isPlayer1 = player1Name.value === socketStore.username
   const myPlayer = isPlayer1 ? p1.value : p2.value
   const opponent = isPlayer1 ? p2.value : p1.value
   
@@ -303,12 +305,12 @@ function update() {
       moved = true
     }
   }
-  
+  // 不断更新玩家位置，确保不超出边界
   if (moved && yChanged !== 0) {
     myPlayer.y = Math.max(0, Math.min(400 - playerHeight, myPlayer.y))
-    socketService.sendPlayerAction('move_y', myPlayer.y)
+    socketStore.sendPlayerAction('move_y', myPlayer.y)
   }
-  
+  // 更新玩家和对手的子弹位置
   updateBullets(myPlayer, opponent, true)
   updateBullets(opponent, myPlayer, false)
   
@@ -332,10 +334,10 @@ function updateBullets(
     ) {
       attacker.bullets.splice(i, 1)
       target.hp--
-      
+      // 发送命中事件到服务器
       if (isLocal) {
         const targetId = target === p1.value ? player1Name.value : player2Name.value
-        socketService.sendHit(targetId, 1, target.hp)
+        socketStore.sendHit(targetId, 1, target.hp)
       }
       
       if (target.hp <= 0) {
@@ -351,18 +353,18 @@ function updateBullets(
 }
 
 function handleDeath(playerId: string) {
-  socketService.sendDeath(playerId)
+  socketStore.sendDeath(playerId)
   
   const winner = playerId === player1Name.value ? player2Name.value : player1Name.value
-  socketService.sendGameOver(winner, playerId, 0)
+  socketStore.sendGameOver(winner, playerId, 0)
 }
 
 function checkGameOver() {
   if (p1.value.hp <= 0 || p2.value.hp <= 0) {
     if (p2.value.hp <= 0) {
-      socketService.sendGameOver(player1Name.value, player2Name.value, 0)
+      socketStore.sendGameOver(player1Name.value, player2Name.value, 0)
     } else {
-      socketService.sendGameOver(player2Name.value, player1Name.value, 0)
+      socketStore.sendGameOver(player2Name.value, player1Name.value, 0)
     }
   }
 }
@@ -513,7 +515,7 @@ function drawPlayer(player: typeof p1.value) {
 
 function startGameLoop() {
   function loop() {
-    if (socketService.gameStarted.value) {
+    if (socketStore.gameStarted) {
       update()
     }
     draw()
@@ -523,8 +525,8 @@ function startGameLoop() {
 }
 
 function backToRooms() {
-  socketService.gameStarted.value = false
-  socketService.gameOver.value = false
+  socketStore.gameStarted = false
+  socketStore.gameOver = false
   router.push('/rooms')
 }
 </script>

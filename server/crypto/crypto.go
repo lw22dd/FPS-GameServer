@@ -9,9 +9,15 @@ import (
 	"fmt"
 )
 
+// Crypto 提供数据传输加密解密功能，这里是对称加密功能
 var (
 	encryptionKey = []byte("32字节密钥1234567890123456")
 )
+
+func init() {
+	// 确保密钥长度为32字节
+	SetKey("32字节密钥1234567890123456")
+}
 
 func SetKey(key string) {
 	if len(key) >= 32 {
