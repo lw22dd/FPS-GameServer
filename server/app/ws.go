@@ -176,6 +176,7 @@ func (c *Client) readPump() {
 		return nil
 	})
 	for {
+		// 调用websocketAPI 读取消息
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
 			break

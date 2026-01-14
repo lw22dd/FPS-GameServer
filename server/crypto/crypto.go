@@ -33,6 +33,7 @@ func GetKey() []byte {
 	return encryptionKey
 }
 
+// 加密逻辑
 func Encrypt(plaintext string) (string, error) {
 	block, err := aes.NewCipher(encryptionKey)
 	if err != nil {
@@ -53,6 +54,7 @@ func Encrypt(plaintext string) (string, error) {
 	return base64.StdEncoding.EncodeToString(ciphertext), nil
 }
 
+// 解密逻辑
 func Decrypt(encryptedBase64 string) (string, error) {
 	ciphertext, err := base64.StdEncoding.DecodeString(encryptedBase64)
 	if err != nil {

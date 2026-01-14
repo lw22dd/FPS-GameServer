@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/LoginView.vue'
 import RoomView from '@/views/RoomView.vue'
-import ShootingGame from '@/components/ShootingGame.vue'
+import ShootingGame from '@/views/ShootingGame.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },

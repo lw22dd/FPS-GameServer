@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { ref, onMounted, onUnmounted,  computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSocketStore } from '@/stores/socketStore'
 
@@ -191,7 +191,6 @@ function cleanupSocketListeners() {
 }
 
 function initGameState() {
-  const username = socketStore.username
   const room = socketStore.currentRoom
   
   if (room && room.players) {
@@ -236,7 +235,6 @@ function handleKeydown(e: KeyboardEvent) {
   const now = Date.now()
   const isPlayer1 = player1Name.value === socketStore.username
   const myPlayer = isPlayer1 ? p1.value : p2.value
-  const opponent = isPlayer1 ? p2.value : p1.value
   
   if ((e.key === 'd' || e.key === 'D') && isPlayer1) {
     if (now - lastFireTime >= fireCooldown) {
