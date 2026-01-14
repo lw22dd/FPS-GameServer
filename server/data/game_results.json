@@ -87,6 +87,30 @@
       "loser": "user2",
       "play_time": "2026-01-14T14:09:14.0075143+08:00",
       "duration": 0
+    },
+    {
+      "id": "result_1768377010832860100",
+      "room_id": "",
+      "winner": "user",
+      "loser": "user2",
+      "play_time": "2026-01-14T15:50:10.8328601+08:00",
+      "duration": 0
+    },
+    {
+      "id": "result_1768377010833871700",
+      "room_id": "",
+      "winner": "user",
+      "loser": "user2",
+      "play_time": "2026-01-14T15:50:10.8338717+08:00",
+      "duration": 0
+    },
+    {
+      "id": "result_1768377010834380600",
+      "room_id": "",
+      "winner": "user",
+      "loser": "user2",
+      "play_time": "2026-01-14T15:50:10.8343806+08:00",
+      "duration": 0
     }
   ]
 }

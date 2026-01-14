@@ -279,7 +279,7 @@ export const useSocketStore = defineStore('socket', () => {
     function handleHitAction(payload: any) {
         if (!gameState.value) return
         
-        // 同时支持下划线和驼峰命名的字段
+        // 同步血量，客户端收到hit之后更新自己的血量为从服务端接收到的血量
         const targetId = payload.target_id || payload.targetId
         const remaining = payload.remaining
         const isHero1 = gameState.value.hero1.id === targetId || 

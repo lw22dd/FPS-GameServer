@@ -265,7 +265,7 @@ function fire(player: typeof p1.value, direction: number) {
   }
   
   player.bullets.push(bullet)
-  
+  // 同步开火
   socketStore.sendFire(direction, bullet.x, bullet.y)
 }
 
@@ -323,7 +323,7 @@ function updateBullets(
   for (let i = attacker.bullets.length - 1; i >= 0; i--) {
     const b = attacker.bullets[i]
     b.x += b.vx
-    
+    // 检查子弹是否击中目标
     if (
       b.x > target.x &&
       b.x < target.x + playerWidth &&
@@ -334,7 +334,7 @@ function updateBullets(
       
       // 只有本地子弹才在客户端处理伤害，远程子弹由服务器广播的hit消息处理
       if (isLocal) {
-        target.hp--
+        target.hp--//默认子弹伤害为 1，本地判断伤害-1，同时发送给远程客户端的伤害也为-1
         const targetId = target === p1.value ? player1Name.value : player2Name.value
         socketStore.sendHit(targetId, 1, target.hp)
         

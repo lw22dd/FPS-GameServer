@@ -1,3 +1,16 @@
 {
-  "rooms": []
+  "rooms": [
+    {
+      "id": "room_1768376947733598300",
+      "name": "test",
+      "host_id": "user",
+      "players": [
+        "user",
+        "user2"
+      ],
+      "max_players": 2,
+      "status": "playing",
+      "created_at": "2026-01-14T15:49:07.7335983+08:00"
+    }
+  ]
 }
