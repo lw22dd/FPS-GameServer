@@ -333,15 +333,16 @@ function updateBullets(
       b.y < target.y + playerHeight
     ) {
       attacker.bullets.splice(i, 1)
-      target.hp--
-      // 发送命中事件到服务器
+      
+      // 只有本地子弹才在客户端处理伤害，远程子弹由服务器广播的hit消息处理
       if (isLocal) {
+        target.hp--
         const targetId = target === p1.value ? player1Name.value : player2Name.value
         socketStore.sendHit(targetId, 1, target.hp)
-      }
-      
-      if (target.hp <= 0) {
-        handleDeath(target === p1.value ? player1Name.value : player2Name.value)
+        
+        if (target.hp <= 0) {
+          handleDeath(target === p1.value ? player1Name.value : player2Name.value)
+        }
       }
       continue
     }
