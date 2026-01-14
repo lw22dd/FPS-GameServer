@@ -60,9 +60,9 @@
       "username": "user2",
       "password": "e10adc3949ba59abbe56e057f20f883e",
       "email": "user2@game.local",
-      "online": true,
+      "online": false,
       "login_time": "2026-01-12T15:32:20.5635247+08:00",
-      "room_id": "room_1768203200540302700"
+      "room_id": ""
     },
     {
       "username": "testuser123",
@@ -76,9 +76,9 @@
       "username": "user",
       "password": "e10adc3949ba59abbe56e057f20f883e",
       "email": "user@game.local",
-      "online": true,
+      "online": false,
       "login_time": "2026-01-12T15:33:16.5324059+08:00",
-      "room_id": "room_1768203200540302700"
+      "room_id": ""
     }
   ]
 }

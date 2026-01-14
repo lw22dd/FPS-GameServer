@@ -421,6 +421,7 @@ export const useSocketStore = defineStore('socket', () => {
         createRoom,
         joinRoom,
         getRoomList,
+        
         startGame,
         sendPlayerAction,
         sendFire,
